@@ -24,23 +24,37 @@ void runSimulation( const int pNum, const int N0, const int nb, const double xmi
 The parameters are:
 
 -`maxN`: The maximum number of points in the distribution.
+
 -`dp`: The effective dimension of the problem, the number of particles multiplied by the spatial
 dimension.
+
 -`pNum`: The number of particles.
+
 -`N0`: The initial number of points in the distribution.
+
 -`nb`: The number of buckets used for determining the wave function.
+
 -`xmin` and `xmax`: Defines the support of the wave function [`xmin`,`xmax`]^`dp`.
+
 -`timeStep`: The time step in atomic units.
+
 -`alpha`: Update parameter for the self consistent energy calculation.
+
 -`x0`: The initial position of all points in the distribution.
+
 -`V`: The potential.
+
 -`numThreads`: The number of concurrent simulations run.
+
 -`printWF`: A boolean flag that controls output of the wave function
+
 -`printDist`: A boolean flag that controls output of the distribution of points.
 
 Two other functions that may be of interest to the user are
 ```c++
 double uniform( const double a, const double b)
+```
+```c++
 double gaussian( const double mean, const double stdDev)
 ```
 which can be used to generate random numbers drawn from uniform/Gaussian distributions. These may be
