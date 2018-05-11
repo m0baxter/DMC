@@ -1,0 +1,113 @@
+\RequirePackage[l2tabu, orthodox]{nag}
+
+\documentclass[letterpaper, 11 pt]{report}
+%\documentclass[a5paper, 8 pt]{extreport}
+%\usepackage[a5paper, top = 1.0 in, bottom = 0.9 in]{geometry}
+%\usepackage[pass]{geometry}
+
+%\usepackage[sc]{mathpazo}
+%\linespread{1.05}
+
+\usepackage{garamondx}
+\usepackage[garamondx,cmbraces]{newtxmath}
+
+\usepackage[T2A, T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{CJKutf8}
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{braket}
+\usepackage{ellipsis}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{placeins}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{setspace}
+\usepackage[sc]{titlesec}
+\usepackage[doi = false, url = false, isbn = false,
+            maxbibnames = 99, sorting = none, backend = bibtex,
+            giveninits = true, style = numeric-comp]{biblatex}
+\usepackage[colorlinks, breaklinks=true]{hyperref}
+\usepackage[toc,page]{appendix}
+
+%change link colours:
+\hypersetup{ linktocpage, colorlinks=true, linkcolor=blue,
+             citecolor=blue, filecolor=blue, urlcolor=blue }
+
+%Bibliography stuff:
+\addbibresource{dmcDoc.bib}
+
+%Make titles a link:
+\newbibmacro{string+doiurlisbn}[1]{%
+   \iffieldundef{doi}{%
+      \iffieldundef{url}{%
+         \iffieldundef{isbn}{%
+            \iffieldundef{issn}{%
+               #1%
+            }{%
+               \href{http://books.google.com/books?vid=ISSN\thefield{issn}}{#1}%
+            }%
+         }{%
+            \href{http://books.google.com/books?vid=ISBN\thefield{isbn}}{#1}%
+         }%
+      }{%
+         \href{\thefield{url}}{#1}%
+      }%
+   }{%
+      \href{http://dx.doi.org/\thefield{doi}}{#1}%
+   }%
+}
+
+\DeclareFieldFormat{title}{\usebibmacro{string+doiurlisbn}{\mkbibemph{#1}}}
+\DeclareFieldFormat[article,incollection]{title}%
+   {\usebibmacro{string+doiurlisbn}{\mkbibquote{#1}}}
+
+
+\title{PHYS 5000 Computational Assignment:\\The diffusion Monte Carlo method}
+\date{FW 2018}
+\author{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Introduction}
+
+\begin{itemize}
+
+   \item Introduce the problem.
+
+   \item Describe utility: Ionization energy, having an initial condition for propagation\dots
+
+   \item Briefly describe \textsc{dmc}~\cite{dmc}.
+
+\end{itemize}
+
+\section*{Requirements}
+
+\begin{itemize}
+
+   \item Use provided code to calculate $E_0$, $\Delta E_0$, and $\phi_0$ for at least three systems.
+
+   \item Provide your dmc.cpp for each system calculated as well as code used to find the energy, its
+      error, and to plot the wave function or the distribution.
+
+   \item Write a report in the style of a journal article.
+
+   \item Include a brief description of the method, a discussion of your resuls, conclusion.
+
+   \item In particular comment on the accuracy of the method, how it can be minimized, and general
+      applicability of the method.
+
+\end{itemize}
+
+\section*{Rubric}
+
+\printbibliography[title=References]
+
+\end{document}
