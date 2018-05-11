@@ -165,7 +165,7 @@ void writeWavefunction( const double a, const double b, const int nb,
                         std::map< std::array<int, dp>, int> &counts ) {
 
    std::stringstream ss;
-   ss << "wf-" << std::this_thread::get_id() << ".txt";
+   ss << "./wavefunction/wf-" << std::this_thread::get_id() << ".txt";
    std::ofstream writeFile( ss.str().c_str() );
 
    int total = 0;
@@ -200,10 +200,36 @@ void writeEnergy( const std::vector<double> &Es ) {
 }
 
 template< int maxN, int dp >
-void diffusionMC( const int N0, const int nb, const double xmin, const double xmax,
+void writeDistribution( const int pNum, std::array<int, maxN> &flags,
+                        std::array< std::array<double, dp>, maxN> &points ) {
+
+   std::stringstream ss;
+   ss << "./distros/dist-" << std::this_thread::get_id() << ".txt";
+   std::ofstream writeFile( ss.str().c_str() );
+
+   int d = dp/pNum;
+
+   for ( int i = 0; i < maxN; ++i ) {
+
+      if ( flags[i] ) {
+         for ( int p = 0; p < pNum; ++p ) {
+            for ( int j = 0; j < d; ++j ) {
+               writeFile << points[i][ p * d + j ] << "  ";
+            }
+
+            writeFile << "\n";
+         }
+      }
+   }
+
+   writeFile.close();
+}
+
+template< int maxN, int dp >
+void diffusionMC( const int pNum, const int N0, const int nb, const double xmin, const double xmax,
                   const double timeStep, const double relaxTime, const double alpha,
                   std::array<double, dp> x0, std::function<double (std::array<double, dp> &)> &V,
-                  std::vector<double> &Es, std::map< std::array<int, dp>, int> &counts ) {
+                  const bool printWF, const bool printDist ) {
    /*Executes the main DMC loop.*/
 
    if ( N0 > maxN ) {
@@ -216,9 +242,9 @@ void diffusionMC( const int N0, const int nb, const double xmin, const double xm
       return;
    }
 
-   Es.push_back( V(x0) );
+   std::vector<double> Es = { V(x0) };
+   std::map< std::array<int, dp>, int> counts;
    int currentN = N0;
-   int steps = 0;
    double tau = 0;
    double dt = std::sqrt( timeStep );
 
@@ -232,32 +258,36 @@ void diffusionMC( const int N0, const int nb, const double xmin, const double xm
 
       currentN = branch<maxN, dp>( currentN, timeStep, alpha, flags, points, Es, V );
 
-      if ( tau > relaxTime ) {
+      if ( printWF and tau > relaxTime ) {
          count<maxN, dp>( nb, xmin, xmax, counts, flags, points );
       }
 
       tau += timeStep;
-      ++steps;
    }
 
    writeEnergy(Es);
-   //writeWavefunction<dp>( xmin, xmax, nb, counts );
+
+   if ( printWF ) {
+      writeWavefunction<dp>( xmin, xmax, nb, counts );
+   }
+
+   if ( printDist ) {
+      writeDistribution<maxN, dp>( pNum, flags, points );
+   }
 }
 
 template< int maxN, int dp >
-void runSimulation( const int N0, const int nb, const double xmin, const double xmax,
+void runSimulation( const int pNum, const int N0, const int nb, const double xmin, const double xmax,
                     const double timeStep, const double relaxTime, const double alpha,
                     std::array<double, dp> x0, std::function<double (std::array<double, dp> &)> &V,
-                    const int numThreads = 1 ) {
+                    const int numThreads = 1, const bool printWF = false, const bool printDist = false ) {
    /*Simultaneously runs numThreads diffusion Monte Carlo simulations.*/
-
-   std::vector< std::pair<std::vector<double>, std::map< std::array<int, dp>, int> > > results(numThreads);
 
    std::vector<std::thread> threads;
 
-   for ( auto &p : results ) {
-      auto f = std::bind( diffusionMC<maxN, dp>, N0, nb, xmin, xmax, timeStep, relaxTime, alpha,
-                          x0, V, p.first, p.second );
+   for ( int i = 0; i < numThreads; ++i ) {
+      auto f = std::bind( diffusionMC<maxN, dp>, pNum, N0, nb, xmin, xmax, timeStep, relaxTime, alpha,
+                          x0, V, printWF, printDist );
       threads.push_back( std::thread(f) );
    }
 

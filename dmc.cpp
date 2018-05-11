@@ -37,7 +37,7 @@ int main() {
    std::array<double, 6> x0 = {0.0, 0.0, 1.0, 0.0, 0.0, -1.0};  //Initial position of particles.
    std::function<double (std::array<double, dp> &)> potential = helium; //The Potential.
 
-   runSimulation<maxN, dp>( N0, nb, xmin, xmax, timeStep, relaxTime, alpha, x0, potential, 8 );
+   runSimulation<maxN, dp>( s, N0, nb, xmin, xmax, timeStep, relaxTime, alpha, x0, potential, 8 );
 
    return 0;
 }
