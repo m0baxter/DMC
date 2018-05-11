@@ -16,6 +16,7 @@
 
 
 double gaussian( const double mean, const double stdDev ) {
+   /*Draws random numbers from a Gaussian distribution of given mean and standard deviation.*/
 
    thread_local std::mt19937 engine( std::random_device{}() );
    std::normal_distribution<double> dist( mean, stdDev );
@@ -23,12 +24,12 @@ double gaussian( const double mean, const double stdDev ) {
 }
 
 double uniform( const double a, const double b ) {
+   /*Draws random numbers from a uniform distribution over the range [a,b].*/
 
    thread_local std::mt19937 engine( std::random_device{}() );
    std::uniform_real_distribution<double> dist( a, std::nextafter(b, std::numeric_limits<double>::max()) );
    return dist(engine);
 }
-
 
 template< int maxN, int dp > //dp = d * num particles
 std::pair< std::array<int, maxN>, std::array< std::array<double, dp>, maxN> > initialize( const int N0, std::array<double, dp> &x0 ) {
@@ -55,6 +56,7 @@ std::pair< std::array<int, maxN>, std::array< std::array<double, dp>, maxN> > in
 
 template< int maxN, int dp >
 void walk( const double timeStep, std::array<int, maxN> &flags, std::array< std::array<double, dp>, maxN> &points ) {
+   /*Propagates all points forward in time by one time step.*/
 
    for ( int i = 0; i < maxN; ++i ) {
 
@@ -69,6 +71,8 @@ void walk( const double timeStep, std::array<int, maxN> &flags, std::array< std:
 template< int dp >
 int spawnNumber( std::array<double, dp> &x, const double E, const double u, double dt,
                  std::function<double (std::array<double, dp> &)> &V ) {
+   /*Determines the number of replicas of the given point to produce
+    * (or if the point should be removed).*/
 
   return std::min( (int)std::floor(std::exp( (E - V(x))*dt ) + u), 3 );
 }
@@ -78,6 +82,7 @@ template< int maxN, int dp >
 int branch( const int N, const double dt, const double alpha, std::array<int, maxN> &flags,
             std::array< std::array<double, dp>, maxN> &points, std::vector<double> &Es,
             std::function<double (std::array<double, dp> &)> &V ) {
+   /*Replicates/removes points from the distribution as needed.*/
 
    int nextN = N;
 
@@ -163,6 +168,7 @@ void count( const int nb, const double a, const double b, std::map< std::array<i
 template< int dp >
 void writeWavefunction( const double a, const double b, const int nb,
                         std::map< std::array<int, dp>, int> &counts ) {
+   /*Prints the wave function to file. Each file is labeled by the thread ID.*/
 
    std::stringstream ss;
    ss << "./wavefunction/wf-" << std::this_thread::get_id() << ".txt";
@@ -187,6 +193,7 @@ void writeWavefunction( const double a, const double b, const int nb,
 }
 
 void writeEnergy( const std::vector<double> &Es ) {
+   /*Prints the history of the ground state energy to a file labeled by thread ID.*/
 
    std::stringstream ss;
    ss << "./energy/energy-" << std::this_thread::get_id() << ".txt";
@@ -202,6 +209,7 @@ void writeEnergy( const std::vector<double> &Es ) {
 template< int maxN, int dp >
 void writeDistribution( const int pNum, std::array<int, maxN> &flags,
                         std::array< std::array<double, dp>, maxN> &points ) {
+   /*Prints the distribution of points to a file tagged with thread ID.*/
 
    std::stringstream ss;
    ss << "./distros/dist-" << std::this_thread::get_id() << ".txt";
@@ -294,22 +302,6 @@ void runSimulation( const int pNum, const int N0, const int nb, const double xmi
    for ( auto &t : threads ) {
       t.join();
    }
-
-   //std::vector<double> avgEs;
-   //int numEs = results.back().first.size();
-
-   //for ( int i = 0; i < numEs; ++i ) {
-   //   std::vector<double> temp;
-
-   //   for ( auto &p : results ) {
-   //      temp.push_back( p.first.at(i) );
-   //   }
-   //   avgEs.push_back( std::accumulate(temp.begin(), temp.end(), 0.0) / temp.size() );
-   //}
-
-   //std::cout << avgEs.size() << "  numEs: " << numEs << std::endl;
-
-   //writeEnergy(avgEs);
 }
 
 #endif
