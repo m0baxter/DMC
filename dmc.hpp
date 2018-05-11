@@ -236,7 +236,7 @@ void writeDistribution( const int pNum, std::array<int, maxN> &flags,
 template< int maxN, int dp >
 void diffusionMC( const int pNum, const int N0, const int nb, const double xmin, const double xmax,
                   const double timeStep, const double relaxTime, const double alpha,
-                  std::array<double, dp> x0, std::function<double (std::array<double, dp> &)> &V,
+                  std::array<double, dp> &x0, std::function<double (std::array<double, dp> &)> &V,
                   const bool printWF, const bool printDist ) {
    /*Executes the main DMC loop.*/
 
@@ -287,7 +287,7 @@ void diffusionMC( const int pNum, const int N0, const int nb, const double xmin,
 template< int maxN, int dp >
 void runSimulation( const int pNum, const int N0, const int nb, const double xmin, const double xmax,
                     const double timeStep, const double relaxTime, const double alpha,
-                    std::array<double, dp> x0, std::function<double (std::array<double, dp> &)> &V,
+                    std::array<double, dp> &x0, std::function<double (std::array<double, dp> &)> &V,
                     const int numThreads = 1, const bool printWF = false, const bool printDist = false ) {
    /*Simultaneously runs numThreads diffusion Monte Carlo simulations.*/
 
