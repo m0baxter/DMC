@@ -7,6 +7,7 @@
 #include <utility>
 #include <functional>
 #include <cmath>
+#include <cstdlib>
 #include <algorithm>
 #include <map>
 #include <thread>
@@ -170,6 +171,8 @@ void writeWavefunction( const double a, const double b, const int nb,
                         std::map< std::array<int, dp>, int> &counts ) {
    /*Prints the wave function to file. Each file is labeled by the thread ID.*/
 
+   const int code = system("mkdir -p wavefunction");
+
    std::stringstream ss;
    ss << "./wavefunction/wf-" << std::this_thread::get_id() << ".txt";
    std::ofstream writeFile( ss.str().c_str() );
@@ -195,6 +198,8 @@ void writeWavefunction( const double a, const double b, const int nb,
 void writeEnergy( const std::vector<double> &Es ) {
    /*Prints the history of the ground state energy to a file labeled by thread ID.*/
 
+   const int code = system("mkdir -p energy");
+
    std::stringstream ss;
    ss << "./energy/energy-" << std::this_thread::get_id() << ".txt";
    std::ofstream writeFile( ss.str().c_str() );
@@ -210,6 +215,8 @@ template< int maxN, int dp >
 void writeDistribution( const int pNum, std::array<int, maxN> &flags,
                         std::array< std::array<double, dp>, maxN> &points ) {
    /*Prints the distribution of points to a file tagged with thread ID.*/
+
+   const int code = system("mkdir -p distros");
 
    std::stringstream ss;
    ss << "./distros/dist-" << std::this_thread::get_id() << ".txt";
@@ -294,6 +301,7 @@ void runSimulation( const int pNum, const int N0, const int nb, const double xmi
    std::vector<std::thread> threads;
 
    for ( int i = 0; i < numThreads; ++i ) {
+      std::cout << i << std::endl;
       auto f = std::bind( diffusionMC<maxN, dp>, pNum, N0, nb, xmin, xmax, timeStep, relaxTime, alpha,
                           x0, V, printWF, printDist );
       threads.push_back( std::thread(f) );
