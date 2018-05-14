@@ -264,8 +264,8 @@ void diffusionMC( const int pNum, const int N0, const int nb, const double xmin,
    double dt = std::sqrt( timeStep );
 
    auto p = initialize<maxN, dp>( N0, x0 );
-   std::array<int, maxN> flags = p.first;
-   std::array< std::array<double, dp>, maxN> points = p.second;
+   thread_local std::array<int, maxN> flags = p.first;
+   thread_local std::array< std::array<double, dp>, maxN> points = p.second;
 
    while ( tau < 2 * relaxTime ) {
 

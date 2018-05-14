@@ -60,6 +60,9 @@ double gaussian( const double mean, const double stdDev)
 which can be used to generate random numbers drawn from uniform/Gaussian distributions. These may be
 useful for generating initial values for `x0`.
 
+The sample parameters provided in `dmc.cpp` will calculate the ground state of the quantum harmonic
+oscillator.
+
 ## References
 [1] I. Kosztin, B. Faber, and K. Schulten, [Introduction to the Diffusion Monte Carlo
 Method](https://arxiv.org/abs/physics/9702023). arXiv:physics/9702023 [physics.comp-ph].
