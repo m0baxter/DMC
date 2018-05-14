@@ -301,7 +301,6 @@ void runSimulation( const int pNum, const int N0, const int nb, const double xmi
    std::vector<std::thread> threads;
 
    for ( int i = 0; i < numThreads; ++i ) {
-      std::cout << i << std::endl;
       auto f = std::bind( diffusionMC<maxN, dp>, pNum, N0, nb, xmin, xmax, timeStep, relaxTime, alpha,
                           x0, V, printWF, printDist );
       threads.push_back( std::thread(f) );
