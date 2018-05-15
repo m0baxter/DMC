@@ -1,6 +1,6 @@
 \RequirePackage[l2tabu, orthodox]{nag}
 
-\documentclass[letterpaper, 11 pt]{report}
+\documentclass[letterpaper, 11 pt]{article}
 %\documentclass[a5paper, 8 pt]{extreport}
 %\usepackage[a5paper, top = 1.0 in, bottom = 0.9 in]{geometry}
 %\usepackage[pass]{geometry}
@@ -69,7 +69,7 @@
 
 
 \title{PHYS 5000 Computational Assignment:\\The diffusion Monte Carlo method}
-\date{FW 2018}
+\date{Fall 2018}
 \author{}
 
 \begin{document}
@@ -78,35 +78,137 @@
 
 \section*{Introduction}
 
+Consider an $N$ particle quantum system with Hamiltonian
+%
+\begin{equation} \label{eq:ham}
+   \hat{H} = \sum\limits_{j = 1}^N \frac{\hat{p}^2_j}{2m_j} + V(\hat{\mathbf{r}}_1, \dots
+   \hat{\mathbf{r}_N}).
+\end{equation}
+%
+Such a Hamiltonian can be used to describe an atom or molecule with $N$ electrons. For such systems it
+is often useful to know the ground-state energy $E_0$ and the ground-state wave function $\phi_0$. For
+example, the ground-state energy can be used to determine ionization potentials, the amount of energy
+needed to remove an electron from an atom/molecule. The ground state can be used as the initial value
+in a variety of situations. Unfortunately it is often impossible to explicitly determine these
+quantities.
+
+Expanding a solution $psi$ of the Schr\"odinger equation associated with the Eq.~\eqref{eq:ham} in terms
+of energy eigenfunctions we have, in atomic units,
+%
+\begin{equation} \label{eq:expansion}
+   \psi(\mathbf{r}_1,\dots,\mathbf{r}_N,t) = \sum_n c_n \phi_n(\mathbf{r}_1,\dots,\mathbf{r}_N)
+   e^{-i E_n t},
+\end{equation}
+%
+where
+%
+\begin{equation}
+   \hat{H} \phi_n = E_n \phi_n,
+\end{equation}
+%
+with
+%
+\begin{equation}
+   E_0 < E_1 \leq < E_2 \dots
+\end{equation}
+
+To facilitate the calculation of the ground-state energy and wave function we will make two changes.
+First we perform a Wick rotation, make the substitution $\tau = it$. In which case the Schr\"odinger
+equation becomes a diffusion equation
+%
+\begin{equation}
+   \frac{\partial \psi}{\partial \tau} = \sum_j^N \frac{\Delta_j \psi}{2m_j} - V(x) \psi.
+\end{equation}
+%
+Second, we shift the energy scale by replacing $V \rightarrow V - E_R$ for some $E_R$.
+
+With both of these changes made Eq.~\eqref{eq:expansion} becomes
+%
+\begin{equation}
+   \psi(\mathbf{r}_1,\dots,\mathbf{r}_N,\tau) = \sum_n c_n \phi_n(\mathbf{r}_1,\dots,\mathbf{r}_N)
+   e^{-(E_n- E_r) \tau}.
+\end{equation}
+%
+There are now three possible outcomes:
+
 \begin{itemize}
+      
+   \item[(i)] If $E_R > E_0$ Then $\lim\limits_{\tau \rightarrow \infty} \psi(\tau) \rightarrow \infty$.
 
-   \item Introduce the problem.
+   \item[(ii)] If $E_R < E_0$ Then $\lim\limits_{\tau \rightarrow \infty} \psi(\tau) \rightarrow 0$.
 
-   \item Describe utility: Ionization energy, having an initial condition for propagation\dots
-
-   \item Briefly describe \textsc{dmc}~\cite{dmc}.
+   \item[(iii)] If $E_R = E_0$ Then $\lim\limits_{\tau \rightarrow \infty} \psi(\tau) \rightarrow
+      c_0\phi_0$.
 
 \end{itemize}
+%
+We then see that for the right choice of $E_R$ we can determine the ground state of the system by
+propagating to infinite imaginary time. This is the basis of the diffusion Monte Carlo method~\cite{dmc} (\textsc{dmc}) where the imaginary time diffusion equation is solved self consistently to calculate
+$E_0$ and $\phi_0$ simultaneously.
 
-\section*{Requirements}
+\section*{Assignment}
 
 \begin{itemize}
 
-   \item Use provided code to calculate $E_0$, $\Delta E_0$, and $\phi_0$ for at least three systems.
+   \item[(1)] Read Ref.~\cite{dmc} for a brief introduction to \textsc{dmc}.
 
-   \item Provide your dmc.cpp for each system calculated as well as code used to find the energy, its
-      error, and to plot the wave function or the distribution.
+   \item[(2)] Using the code provided\footnote{\href{https://github.com/m0baxter/DMC}
+      {https://github.com/m0baxter/DMC}}, which produces the time evolution of $E_R(\tau)$ and the
+      ground-state wave function, or by writing your own complete the following tasks:
 
-   \item Write a report in the style of a journal article.
+      \begin{itemize}
 
-   \item Include a brief description of the method, a discussion of your resuls, conclusion.
+         \item[(i)] Determine the ground-state energy of the helium atom. Estimate the error,
+            $\Delta E_0$.
 
-   \item In particular comment on the accuracy of the method, how it can be minimized, and general
-      applicability of the method.
+         \item[(ii)] Convince your self that determining the 6-dimensional wave function $\phi_0$
+            is a non-trivial task\footnote{WARNING: Running the provided code using a large grid
+            may cause your system to hang.}.
+
+         \item[(iii)] Often working with the full Hamiltonian for an atomic/molecular system is simply
+            too expensive. In practice one often works instead with a simplified \emph{soft-core}
+            potential
+            %
+            \begin{equation}
+               V(x_1, x_2) = -\frac{2}{\sqrt{{x_1}^2 + \epsilon_{en}}}
+                             -\frac{2}{\sqrt{{x_2}^2 + \epsilon_{en}}}
+                             -\frac{1}{\sqrt{{x_2 - x_1}^2 + \epsilon_{ee}}}
+            \end{equation}
+            %
+            The softening parameters $\epsilon_{en}$ and $\epsilon_{ee}$ are then chosen to reproduce
+            some properties of the full system.
+
+            A popular choice are the ionization potentials. $k$-th ionization potential for an
+            atom/molecule is defined as the amount of energy required to remove $k$ electrons. This can
+            be calculated by talking the difference between the ground-state energies of the original
+            system and the ionized system. For helium we have
+            %
+            \begin{align}
+               U_I^{(1)}(\mathrm{He}) = & E_0^{\mathrm{He}^+} - E_0^{\mathrm{He}}, \\
+               U_I^{(2)}(\mathrm{He}) = & E_0^{\mathrm{He}^{2+}} - E_0^{\mathrm{He}^+} = 2.
+            \end{align}
+
+            Find values for $\epsilon_{en}$ and $\epsilon_{ee}$ such that the first and second
+            ionization potential for the soft-core helium atom agree with those of real helium atom.
+            As a hint, by considering the goal of softening parameters one can argue that
+            $\epsilon_{en}, \epsilon_{ee} \in (0,1)$. Provide a plot of the wave function
+            $\phi_0(x_1, x_2)$.
+
+         \item[(iv)] Write a report in the style of a journal article\footnote{If required a \LaTeX\
+            template may be found \href{https://journals.aps.org/revtex}{here}.}. This should contain an
+            introduction, a brief summary of the theory (a  description of \textsc{dmc}), a section
+            summarizing results including a discussion of ways to minimize error, and a conclusion.
+
+            Include with your submission all code written in a clear easily perusable format.
+
+      \end{itemize}
 
 \end{itemize}
 
 \section*{Rubric}
+
+Your final project will be assessed according to the following rubric. The citations must be external
+(not this document) and should be books or journal articles:
 
 \printbibliography[title=References]
 
