@@ -5,7 +5,7 @@ wave function of a quantum system. This code is based on the algorithm described
 ## Compilation
 
 This program relies on the c++ functionality only present in c++11 or newer. Notably it makes use of
-the STL thread library. The code is can then be compiled with a command of the form
+the STL thread library. The code can be compiled with a command of the form
 ```
 g++ -O3 -pthreads dmc.cpp -o dmc
 ```
