@@ -34,7 +34,7 @@ dimension.
 
 -`nb`: The number of buckets used for determining the wave function.
 
--`xmin` and `xmax`: Defines the support of the wave function \([`xmin`,`xmax`]^`dp`\).
+-`xmin` and `xmax`: Defines the support of the wave function [`xmin`,`xmax`]^`dp`.
 
 -`timeStep`: The time step in atomic units.
 
