@@ -4,7 +4,7 @@ wave function of a quantum system. This code is based on the algorithm described
 
 ## Compilation
 
-This program relies on the c++ functionality only present in c++11 or newer. Notably it makes use of
+This program relies on the C++ functionality only present in C++11 or newer. Notably it makes use of
 the STL thread library. The code can be compiled with a command of the form
 ```
 g++ -O3 -pthreads dmc.cpp -o dmc
@@ -15,7 +15,7 @@ or the equivalent for your compiler of choice.
 
 DMC calculations may be run by passing appropriate arguments to the template function
 ```c++
-template< int maxN, int dp>
+template< int maxN, int dp >
 void runSimulation( const int pNum, const int N0, const int nb, const double xmin, const double xmax,
                     const double timeStep, const double relaxTime, const double alpha,
                     std::array<double, dp> &x0, std::function<double (std::array<double, dp> &)> &V,
@@ -34,7 +34,7 @@ dimension.
 
 -`nb`: The number of buckets used for determining the wave function.
 
--`xmin` and `xmax`: Defines the support of the wave function [`xmin`,`xmax`]^`dp`.
+-`xmin` and `xmax`: Defines the support of the wave function \([`xmin`,`xmax`]^`dp`\).
 
 -`timeStep`: The time step in atomic units.
 
