@@ -85,14 +85,14 @@ Consider an $N$ particle quantum system with Hamiltonian
    \hat{\mathbf{r}_N}).
 \end{equation}
 %
-Such a Hamiltonian can be used to describe an atom or molecule with $N$ electrons. For such systems it
-is often useful to know the ground-state energy $E_0$ and the ground-state wave function $\phi_0$. For
-example, the ground-state energy can be used to determine ionization potentials, the amount of energy
-needed to remove an electron from an atom/molecule. The ground state can be used as the initial value
-in a variety of situations. Unfortunately it is often impossible to explicitly determine these
-quantities.
+A Hamiltonian of this form can be used to describe an atom or molecule with $N$ electrons. For such
+systems it is often useful to know the ground-state energy $E_0$ and the ground-state wave function
+$\phi_0$. For example, the ground-state energy can be used to determine ionization potentials, the
+amount of energy needed to remove an electron from an atom/molecule. The ground state itself can be used
+as the initial value in a variety of situations. Unfortunately it is often impossible to explicitly
+determine these quantities.
 
-Expanding a solution $psi$ of the Schr\"odinger equation associated with the Eq.~\eqref{eq:ham} in terms
+Expanding a solution $\psi$ of the Schr\"odinger equation associated with the Eq.~\eqref{eq:ham} in terms
 of energy eigenfunctions we have, in atomic units,
 %
 \begin{equation} \label{eq:expansion}
@@ -109,11 +109,11 @@ where
 with
 %
 \begin{equation}
-   E_0 < E_1 \leq < E_2 \dots
+   E_0 < E_1 \leq E_2 \dots
 \end{equation}
 
 To facilitate the calculation of the ground-state energy and wave function we will make two changes.
-First we perform a Wick rotation, make the substitution $\tau = it$. In which case the Schr\"odinger
+First we perform a Wick rotation by making the substitution $\tau = it$. In which case the Schr\"odinger
 equation becomes a diffusion equation
 %
 \begin{equation}
@@ -154,7 +154,7 @@ $E_0$ and $\phi_0$ simultaneously.
 
    \item[(2)] Using the code provided\footnote{\href{https://github.com/m0baxter/DMC}
       {https://github.com/m0baxter/DMC}}, which produces the time evolution of $E_R(\tau)$ and the
-      ground-state wave function, or by writing your own complete the following tasks:
+      ground-state wave function, or by writing your own, complete the following tasks:
 
       \begin{itemize}
 
@@ -163,10 +163,10 @@ $E_0$ and $\phi_0$ simultaneously.
 
          \item[(ii)] Convince your self that determining the 6-dimensional wave function $\phi_0$
             is a non-trivial task\footnote{WARNING: Running the provided code using a large grid
-            may cause your system to hang.}.
+            may quickly eat up all available \textsc{ram}.}.
 
-         \item[(iii)] Often working with the full Hamiltonian for an atomic/molecular system is simply
-            too expensive. In practice one often works instead with a simplified \emph{soft-core}
+         \item[(iii)] Generally working with the full Hamiltonian for an atomic/molecular system is
+            simply too expensive. In practice one often works instead with a simplified \emph{soft-core}
             potential
             %
             \begin{equation}
@@ -178,9 +178,9 @@ $E_0$ and $\phi_0$ simultaneously.
             The softening parameters $\epsilon_{en}$ and $\epsilon_{ee}$ are then chosen to reproduce
             some properties of the full system.
 
-            A popular choice are the ionization potentials. $k$-th ionization potential for an
+            A popular choice are the ionization potentials. The $k$-th ionization potential for an
             atom/molecule is defined as the amount of energy required to remove $k$ electrons. This can
-            be calculated by talking the difference between the ground-state energies of the original
+            be calculated by taking the difference between the ground-state energies of the original
             system and the ionized system. For helium we have
             %
             \begin{align}
@@ -204,11 +204,6 @@ $E_0$ and $\phi_0$ simultaneously.
       \end{itemize}
 
 \end{itemize}
-
-\section*{Rubric}
-
-Your final project will be assessed according to the following rubric. The citations must be external
-(not this document) and should be books or journal articles:
 
 \printbibliography[title=References]
 
